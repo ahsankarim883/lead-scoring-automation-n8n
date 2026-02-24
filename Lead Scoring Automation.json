@@ -1,0 +1,280 @@
+{
+  "name": "My workflow 4",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "test2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -976,
+        -192
+      ],
+      "id": "70091bab-e215-4b50-b874-ec8b20e1feb4",
+      "name": "Webhook",
+      "webhookId": "cdc58587-3867-48ec-867e-a6d02f556db0"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d4582fa1-5aaf-49ed-8a31-ddf0ecdb832a",
+              "name": "=name",
+              "value": "={{$json.body.name}}",
+              "type": "string"
+            },
+            {
+              "id": "e2cb350b-2b6a-43e8-bc9d-d4fcfe5a0f59",
+              "name": "=email",
+              "value": "={{$json.body.email}}",
+              "type": "string"
+            },
+            {
+              "id": "b89019ec-48b6-43ac-80b6-a7464fed11f9",
+              "name": "=budget",
+              "value": "={{ Number($json.body.budget) }}",
+              "type": "number"
+            },
+            {
+              "id": "e26c646a-8c9f-4799-bbb0-c19b8d503d73",
+              "name": "location",
+              "value": "={{$json.body.location}}",
+              "type": "string"
+            },
+            {
+              "id": "b40b1e56-c715-409e-a949-c6643bd89ab0",
+              "name": "=status",
+              "value": "={{ $json.body.budget > 200000 ? \"High Priority\" : \"Normal\" }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -768,
+        -192
+      ],
+      "id": "b2b3b7c1-f40b-4de6-8eb8-0c37dde639d1",
+      "name": "Set"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b7265b02-cd5c-44fa-8e74-2305b09b536d",
+              "leftValue": "={{$json.status}}",
+              "rightValue": "=High Priority",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -320,
+        -192
+      ],
+      "id": "1a8210cc-7880-40f0-984a-d0c6301165dd",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1HSrVBY5IrXKXG4XqpalpiPZgR2Xb4431KFrVdVk-4Wg",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Lead Generation",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "name": "={{$json.name}}",
+            "email": "={{$json.email}}",
+            "budget": "={{$json.budget}}",
+            "location": "={{$json.location}}",
+            "status": "={{$json.status}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "budget",
+              "displayName": "budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "location",
+              "displayName": "location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -560,
+        -192
+      ],
+      "id": "4dd00bc4-6404-45ed-979c-3755ef031409",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OuzlC9qRwIEwSx31",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "ahsankarim883@gmail.com ",
+        "subject": "={{$json.name}}",
+        "message": "=Lead {{$json.name}} has budget {{$json.budget}} in {{$json.location}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -80,
+        -224
+      ],
+      "id": "6faf6927-803c-4e80-b579-3a49492ce4be",
+      "name": "Send a message",
+      "webhookId": "37336f3a-2b0a-4392-9f19-0503b2406ebd",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "IX8QkLcvtZeMTzAd",
+          "name": "Gmail account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        []
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "3e57f063-edd3-44e3-ad8e-6059bf7a2958",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0138fbd672e038e4bf73f0e212e915b4fde428a6ff6e553f3a6ceae9e7983a19"
+  },
+  "id": "vvTsHqcMRjgAVnAP",
+  "tags": []
+}
